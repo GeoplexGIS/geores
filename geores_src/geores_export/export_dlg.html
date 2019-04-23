@@ -1,0 +1,170 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1252">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 3.0  (Win32)">
+	<META NAME="AUTHOR" CONTENT="Wolfgang Sach">
+	<!--link rel="stylesheet" type="text/css" href="gresStyles.css"-->
+	<SCRIPT>
+  
+    function Start()
+    {
+		 	var lod = "";
+                        var cgml = 2;
+			var wfs = false;
+			var translation = document.getElementsByName("TextDX")[0].value + "|" + document.getElementsByName("TextDY")[0].value + "|" + document.getElementsByName("TextDZ")[0].value;
+                        var classestoexport = ""
+                        var selectionList = document.getElementById("cityobjects");
+                        var options = selectionList.options;
+                        for (var i=0, iLen=options.length; i<iLen; i++) {
+                            opt = options[i];
+
+                            if (opt.selected) {
+                              classestoexport += opt.text + "|"
+                            }
+                          }
+
+
+			if(document.getElementsByName("lod0_cb")[0].checked == true){
+				lod += "lod0"
+			}
+                        if(document.getElementsByName("lod1_cb")[0].checked == true){
+				lod += "lod1"
+			}
+                        if(document.getElementsByName("lod2_cb")[0].checked == true){
+				lod += "lod2"
+			}
+                        if(document.getElementsByName("lod3_cb")[0].checked == true){
+				lod += "lod3"
+			}
+                        if(document.getElementsByName("lod4_cb")[0].checked == true){
+				lod += "lod4"
+			}
+                        if(document.getElementsByName("cgml_1")[0].checked == true){
+				cgml = 1;
+			}
+                        if(document.getElementsByName("cgml_2")[0].checked == true){
+				cgml = 2;
+			}
+                        if(document.getElementsByName("wfst")[0].checked == true){
+				wfs = true;
+			}
+
+      window.location = "skp:Start@" + translation + "&" + lod + "&" + wfs + "&" + cgml + "&" + classestoexport + "&" + document.getElementsByName("TextBoxDatei")[0].value + "&" + document.getElementsByName("TextBoxTexOrdner")[0].value;
+    }
+function OpenFile()
+    {
+      window.location = "skp:OpenFile" 
+    }
+function UpdateFileField(str, texfolder)
+{
+		 	document.getElementsByName("TextBoxDatei")[0].value = str;
+                        document.getElementsByName("TextBoxTexOrdner")[0].value = texfolder;
+
+
+}
+
+function UpdateTranslation(translationX, translationY, translationZ){
+                         document.getElementsByName("TextDX")[0].value = translationX;
+                        document.getElementsByName("TextDY")[0].value = translationY;
+                        document.getElementsByName("TextDZ")[0].value = translationZ;
+}
+
+function transl (){
+    window.location = "skp:AddTranslation"
+}
+		
+
+</SCRIPT>
+
+	
+</HEAD>
+<BODY LANG="de-DE" DIR="LTR">
+
+
+  		<div id="header">
+  		 		 	
+  		 			
+
+  		</div> <!--header-->
+                
+
+
+    	
+
+    		<div id ="myp_export">
+    		
+                
+                    <div id="cityobjectdiv_exp">
+                        <h2>Export von CityGML Objekten</h2>
+                        <select id="cityobjects" size="10" multiple>
+                         
+                             
+                             <option id="Bridge" label="Bridge" selected>Bridge</option>
+                             <option id="Building" label="Building" selected>Building</option>
+                             <option id="CityFurniture" label="CityFurniture" selected>CityFurniture</option>
+                             <option id="GenericCityObject" label="GenericCityObject" selected>GenericCityObject</option>
+                             <option id="LandUse" label="LandUse" selected>LandUse</option>
+                              <option id="PlantCover" label="PlantCover" selected>PlantCover</option>
+                              <option id="Railway" label="Railway" selected>Railway</option>
+                              <option id="Road" label="Road" selected>Road</option>
+                             <option id="SolitaryVegetationObject" label="SolitaryVegetationObject" selected>SolitaryVegetationObject</option>
+                             <option id="Square" label="Square" selected>Square</option>
+                             <option id="TIN" label="TIN" selected>TIN</option>
+                             <option id="Track" label="Track" selected>Track</option>
+                             <option id="Tunnel" label="Tunnel" selected>Tunnel</option>
+                             <option id="WaterBody" label="WaterBody" selected>WaterBody</option>
+
+                          </select>
+                    </div>
+                    <ul id="menutop">
+                                              <li style="display:inline; list-style:none;">
+                                              	  <input type="checkbox" name="lod0_cb" value="LoD0" checked >LoD0
+                                                  <input type="checkbox" name="lod1_cb" value="LoD1" checked >LoD1
+                                                  <input type="checkbox" name="lod2_cb" value="LoD2" checked >LoD2
+                                                  <input type="checkbox" name="lod3_cb" value="LoD3" checked >LoD3
+                                                  <input type="checkbox" name="lod4_cb" value="LoD4" checked >LoD4
+                                                 
+     
+                                              </li>
+                                            </ul>
+                    <div id="attributeselectdiv_exp">
+                    <p><INPUT TYPE=TEXT NAME="TextDX" value="0.0" SIZE=23 STYLE="width: 4.5cm; height: 0.9cm; color: #638ba2; font-family: 'DejaVu Sans', sans-serif"> Verschiebung Rechtswert<br><br>
+                    <INPUT TYPE=TEXT NAME="TextDY" value="0.0" SIZE=23 STYLE="width: 4.5cm; height: 0.9cm; color: #638ba2; font-family: 'DejaVu Sans', sans-serif"> Verschiebung Hochwert<br><br>
+                    <INPUT TYPE=TEXT NAME="TextDZ" value="0.0" SIZE=23 STYLE="width: 4.5cm; height: 0.9cm; color: #638ba2; font-family: 'DejaVu Sans', sans-serif"> Verschiebung Hoehe<br><br>
+                    <INPUT TYPE="button" NAME="ADDTRANSL" VALUE="Verschiebung einlesen" STYLE="width: 6cm; height: 0.89cm; color: #638ba2; font-family: 'DejaVu Sans', sans-serif" onclick="transl();"><br><br>
+					
+					
+                                              	  <input type="checkbox" name="cgml_1" value="CityGML1" onclick="handleCityGMLType(this);">  CityGML 1.0 <br><br>
+                                                  <input type="checkbox" name="cgml_2" value="CityGML2" onclick="handleCityGMLType(this);">  CityGML 2.0 <br><br>
+                                                  <input type="checkbox" name="wfst" value="wfst">  WFS-T<br><br>
+                                                  
+
+                                                 
+     				</p>
+                     
+					
+                    </div>
+         			
+    		</div>
+    		<div id = "footer">         
+         
+				<INPUT TYPE="text" NAME="TextBoxDatei" VALUE="..." SIZE=37 STYLE="width: 5.98cm; height: 0.9cm; color: #638ba2; font-family: 'DejaVu Sans', sans-serif; font-size: 11pt">
+			
+				<INPUT TYPE="button" NAME="PushFile" VALUE="Speichern unter" STYLE="width: 3.31cm; height: 0.89cm; color: #638ba2; font-family: 'DejaVu Sans', sans-serif" onclick="OpenFile();">
+				<p><br></p>
+				<INPUT TYPE="text" NAME="TextBoxTexOrdner" VALUE="..." SIZE=37 STYLE="width: 5.98cm; height: 0.9cm; color: #638ba2; font-family: 'DejaVu Sans', sans-serif; font-size: 11pt">  Texturordner
+				<p><br></p>
+				<INPUT TYPE="button" NAME="PushButtonStart" VALUE="Start" STYLE="width: 2.7cm; height: 1cm; color: #638ba2; font-family: 'DejaVu Sans', sans-serif" onclick="Start();">
+		
+			</div>
+    	
+
+  			<!--myp-->
+
+
+  	
+
+</BODY>
+</HTML>

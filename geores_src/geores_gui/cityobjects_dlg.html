@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1252">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 3.0  (Win32)">
+	<META NAME="AUTHOR" CONTENT="Wolfgang Sach">
+	<link rel="stylesheet" type="text/css" href="gresStyles.css">
+	<script src="cityobj_script.js" type="text/javascript"></script>
+
+	
+</HEAD>
+<BODY LANG="de-DE" DIR="LTR">
+
+
+  		<div id="header">
+  		 		 	
+  		 			
+
+  		</div> <!--header-->
+                <ul id="menutop">
+                                              <li>
+                                                  <input type="checkbox" name="lod1_cb" value="LoD1" checked onclick="handleLoDClick(this);">LoD1
+                                                  <input type="checkbox" name="lod2_cb" value="LoD2" checked onclick="handleLoDClick(this);">LoD2
+                                                  <input type="checkbox" name="lod3_cb" value="LoD3" checked onclick="handleLoDClick(this);">LoD3
+                                                  <input type="checkbox" name="lod4_cb" value="LoD4" checked onclick="handleLoDClick(this);">LoD4
+                                                  <input type="checkbox" name="bearb_status" value="Objekt zur Bearbeitung fixieren" onclick="handleselectionobserver(this);">Objekt fixieren
+                                                  <!--input type="button" name="refresh" value="refresh" onclick="refresh();">Refresh-->
+                                              </li>
+                                            </ul>
+                
+
+
+    	
+
+    		<div id ="myp">
+                    <div id="cityobjectdiv">
+                        <h3>CityGML Objekte</h3>
+                        <select id="cityobjects" size="10" onclick="itemselected();" onkeydown="trydelete(event)">
+                         <optgroup id="cityobjectgroup" name="cos" label="CityObjects">
+                             <option name="test" label=""></option>
+                          </optgroup>
+                          </select>
+                        <select id="hidden_cityobjects" style="display:none">
+                         <option name="test1" label="">
+                        </option>
+                        </select>
+                    </div>
+                    <div id="attributeselectdiv">
+                        <h3>Attribute</h3>
+                        <select id="att_list" size="10" onchange="item_att_selected();">
+                         <optgroup id="att_list_group" name="attlist" label="CityObject Attributes">
+                             <option name="test" label=""></option>
+                          </optgroup>
+                          </select>
+                    </div>
+                     <div id="attributediv">
+                         <h3>Attributwerte</h3>
+                         <textarea id="attribute_content" name ="attributes" wrap="off"></textarea>
+                         <INPUT TYPE="button" NAME="SAVE_ATT" VALUE="Attribut speichern" STYLE="width: 4cm; height: 0.89cm; color: #638ba2; font-family: 'DejaVu Sans', sans-serif" onclick="saveatt();"><br>
+                    </div>
+
+    					
+    		</div>
+
+
+  			<!--myp-->
+
+
+  	
+
+</BODY>
+</HTML>
