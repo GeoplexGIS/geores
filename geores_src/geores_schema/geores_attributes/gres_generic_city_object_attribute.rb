@@ -29,7 +29,7 @@ class GRES_GenericCityObjectAttribute < AbstractAll
       retString << " " + array[0].to_s + "=\"" + array[1].to_s + "\""
     }
     retString << ">\n"
-    retString << "<gen:Value>"+ @value + "</gen:Value>\n"
+    retString << "<gen:value>"+ @value + "</gen:value>\n"
     retString << "</" + @name + ">\n"
     return retString
   end

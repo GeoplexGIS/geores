@@ -22,9 +22,13 @@ class GRES_LinearRing
     @pToExport.push(GRES_Point.new(x,y,z))
   end
 
-  def writeToCityGML
-
-     retString = "<gml:LinearRing gml:id=\"" + @gmlid + "\">\n"
+  def writeToCityGML indexRing
+      if(indexRing != nil)
+        retString = "<gml:LinearRing gml:id=\"" + @gmlid + "_" + indexRing.to_s + "\">\n"
+      else
+        retString = "<gml:LinearRing gml:id=\"" + @gmlid + "\">\n"
+      end
+     
      retString << "<gml:posList srsDimension=\"3\">"
      counter = 0
      lastString = ""

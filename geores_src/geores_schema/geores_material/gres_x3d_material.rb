@@ -39,6 +39,7 @@ class GRES_X3DMaterial < GRES_AbstractAppearance
     end
 
      retString << "<app:Appearance>\n"
+     retString << "<app:theme>default</app:theme>"
      retString << "<app:surfaceDataMember>\n"
      retString << "<app:X3DMaterial>\n"
     # if(@name != "")

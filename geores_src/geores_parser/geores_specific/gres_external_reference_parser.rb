@@ -24,6 +24,8 @@ class GRES_ExternalReferenceParser
      end
      if(@currenttag.index("uri") != nil and text != "")
         GRES_CGMLDebugger.writedebugstring("found uri " + text + "\n")
+        text = text.gsub("&", "&amp;")
+        text = text.gsub("\"", "&quot;")
         @externalReference.setexternalobjecturi(text)
      end
      

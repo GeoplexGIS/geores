@@ -119,6 +119,7 @@ class GRES_Building < GRES_Site
       return writeToCityGMLWFST
     end
     retstring = ""
+    addstring = ""
 
     if(@theinternalname.index("BuildingPart") != nil)
        retstring << "<bldg:consistsOfBuildingPart>\n"
@@ -129,8 +130,33 @@ class GRES_Building < GRES_Site
     end
     @simpleCityObjectAttributes.each { |att|
       puts "in Ausgabe der simplen Attribute"
-      puts att.value
-      retstring << att.value
+      str = att.value
+      if(att.value.index("xAl:") != nil)
+        str = att.value.gsub("xAl:", "xAL:")
+      end
+      if(str.index("</gml:Point>\n<gml:pointMember>") != nil)
+        str = str.gsub("</gml:Point>\n<gml:pointMember>", "</gml:Point>\n</gml:pointMember>")
+        puts "Falschen String gefunden"
+      end
+      if(str.index("<//gml:pointMember>") != nil)
+        str = str.gsub("<//gml:pointMember>", "</gml:pointMember>")
+      end
+      if(str.index("gen:Value") != nil)
+         str = str.gsub("gen:Value", "gen:value")
+      end
+      if(str.index("core:MultiPoint") != nil)
+         str = str.gsub("core:MultiPoint", "core:multiPoint")
+      end
+
+      if(str.index("<core:Address") != nil and str.index("<bldg:address") == nil)
+        str = "<bldg:address>\n" + str + "</bldg:address>\n"
+
+      end
+      if(str.index("<bldg:address") != nil)
+        addstring = str
+      else
+        retstring << str
+      end
     }
      if(@lod1MultiSurface.length > 0)
         retstring  << "<bldg:lod1MultiSurface>\n"
@@ -248,6 +274,7 @@ class GRES_Building < GRES_Site
      retstring << bpstring
      retstring << bbstring
      retstring << bistring
+     retstring << addstring
      if(@theinternalname.index("BuildingPart") != nil)
        retstring << "</bldg:BuildingPart>\n"
        retstring << "</bldg:consistsOfBuildingPart>\n"

@@ -1,5 +1,7 @@
-# To change this template, choose Tools | Templates
-# and open the template in the editor.
+# In dieser Klasse findet die CityGML Export Logik statt
+# Über die Funktion writeToCityGML werden alle anderen Funktionen zum Export aufgerufen
+# Die Parameter werden aus der Export Main Klasse und dem entsprechenden Dialog befüllt.
+
 Sketchup::require 'sketchup.rb'
 Sketchup::require 'geores_src/geores_parser/cityobjectparserfactory.rb'
 Sketchup::require 'geores_src/geores_schema/geores_geo/gres_linear_ring.rb'
@@ -13,8 +15,11 @@ Sketchup::require 'geores_src/geores_schema/geores_material/gres_x3d_material.rb
 Sketchup::require 'geores_src/geores_schema/geores_material/gres_texcoordlist.rb'
 Sketchup::require 'geores_src/geores_schema/geores_material/gres_target.rb'
 
+#Konstruktor mit den aus dem Dialog stammenden Parametern für
+#Verschiebung, LoD usw
 class GRESCityGMLExporter
-  def initialize filestring,dx,dy,dz,lod,cgml,iswfst,classesToExport, texfolder
+  def initialize filestring,dx,dy,dz,lod,cgml,iswfst,classesToExport, texfolder, srs
+    #Anlegen von privaten Objektvariablen
     @model = Sketchup.active_model
     @cityobjects = Hash.new()
     @materials = Hash.new()
@@ -22,39 +27,57 @@ class GRESCityGMLExporter
     @translx = dx.to_f
     @transly = dy.to_f
     @translz = dz.to_f
+    @minx = @translx
+    @maxx = @translx
+    @miny = @transly
+    @maxy = @transly
+    @minz = @translz
+    @maxz = @translz
+    @srsname = srs
     @isWFST = iswfst
     @citygmlVersion = cgml
     @textureFolder = texfolder
     @lodsToExport = lod
     @classesToExport = classesToExport
+    #Erstellung der CityObject Factory mit der die entsprechenden CityGML Objekte gebildet werdeb
     @objFactory = CityObjectParserFactory.new(@counter)
+    #Der Umrechnungsfaktor von Zoll auf Meter für die korrekte Ausgabe der Geometrien
     @skpfactor = 0.0254
     @texturewriter = Sketchup.create_texture_writer
     @filename = ""
-    puts filestring
+    #Überprüfung des Dateinamens
+    #puts filestring
     if(filestring.index('/') != nil)
        @filedir = filestring[0,filestring.rindex('/')]
-       puts @filedir
+       #puts @filedir
        @filename = filestring[filestring.rindex('/')+1,filestring.length]
-       puts @filename
+       #puts @filename
     end
     filen = @filename.split(".");
     @filenamewithoutxml = filen[0];
   end
 
 
+  #Diese Funktion wird bei jedem Export aufgerufen
+  #und steuert den kompletten Datenexport
   def writetoCityGML
     begin
+      #Erzeugen des Texturordners, falls dieser noch nicht vorhanden ist
       if(@textureFolder != "")
         Dir.mkdir(@filedir+ "/" + @textureFolder)unless File.exists?(@filedir+ "/" + @textureFolder)
       end
       
-     GRES_CGMLDebugger.init
+    #GRES_CGMLDebugger.init
     @writer = File.open(@filedir+"/"+ @filename, "w")
     rescue =>e
        UI.messagebox "Please insert a valid file path.", MB_OK
       return
     end
+    #Alle aktiven Entitäten des Sketchup Modells anfordern
+    #Zuerst müssen die Texturen der Objekte in den TextureWritwe geladen und
+    #danach ins File System geschrieben werden.
+    #Wird dies nicht zu Beginn gemacht, werdenn ggf. Texturen mit den falschen Dateinamen geschrieben bzw. Texturen überschrieben.
+    #Kann in zukünftigen Versionen nochmals getestet werden - so ist es aber sicher...
     entities = @model.active_entities
     entities.each {|entity|
              if(entity.class == Sketchup::Face)
@@ -77,35 +100,42 @@ class GRESCityGMLExporter
    
     GRES_CGMLDebugger.writedebugstring("GRESCityGMLExporter : Translation is : " + @translx.to_s + " " + @transly.to_s + " " + @translz.to_s + "\n")
 
-    writeheader()
-    #Vorabbehandlung der Impliziten Geometrien
+  
+    #Zuerst werden die impliziten Geometrien behandelt...
     usedEntities = Hash.new()
     implicitRefObjects = Hash.new()
     implicitObjects = Hash.new()
+    #Gehe über alle Entitäten und suche nach Gruppen und Komponenten - diese sind ggf Teil von impliziten Geometriedarstellungen
     entities.each { |ent|
     if(ent.class == Sketchup::Group or ent.class == Sketchup::ComponentInstance)
       groupdict = ent.attribute_dictionary "groupatts"
+      #Schauen ob die Gruppe/Komponente ein entsprechendes AttributDictionary besitzt
       if(groupdict != nil)
         internalname = groupdict["internalname"]
         referenceName = groupdict["referencename"]
         if(internalname != nil)
           isReference = groupdict["isReference"]
           lod = groupdict["lod"]
+          #Hier wird geprüft ob die CityGML Klasse überhaupt Teil der Exportmenge ist bzw. der LoD stimmt
           if(isExportClass(internalname) == false or lod == nil or @lodsToExport.index(lod) == nil)
             GRES_CGMLDebugger.writedebugstring("GRESCityGMLExporter : " + internalname + "oder" + lod + "nicht in Exportmenge - gehe weiter\n")
             next
           end
           parentObject = nil
           if(isReference == "true")
+            #falls diese Gruppe das Referenzobjekt ist, hole dieses aus dem ensprechenden HashSet
             parentObject = implicitRefObjects[internalname]
             if(parentObject == nil)
+              #Existiert das Referenzobjekt noch nicht, sow wird dieses erstellt
               parentObject = @objFactory.getCityObjectForName(internalname)
                implicitRefObjects[internalname] = parentObject
                GRES_CGMLDebugger.writedebugstring("GRESCityGMLExporter : Neues Link Objekt mit Namen + " + internalname + "angelegt\n")
             end
+              #Befüllen der Impliziten Geometrien aus der Entität
               fillImplicitGeometry(parentObject, lod, ent)
             
           else
+            #ist das Objekt kein Referenzobjekt so werden nur die Transformationen der Entität befüllt und ein XLINK zum Referenzobjekt gespeichert
             parentObject = implicitObjects[internalname]
             if(parentObject == nil)
               parentObject = @objFactory.getCityObjectForName(internalname)
@@ -118,6 +148,11 @@ class GRESCityGMLExporter
       end
     end
     }
+
+
+    #Behandlung der impliziten Geometrien, im Einzelnen sind dies auch die Übernahme von Einfügepunkten
+    #oder der Trafo Matrix
+    #TODO: Entschlacken
 
     implicitObjects.each_value { |value|
         refobject = nil
@@ -347,6 +382,9 @@ class GRESCityGMLExporter
 
     }
 
+
+    #BEHANDLUNG der einzelnen Entitäten und Generierung des entsprechenden CityGML Export Objektes dazu
+
     entities.each{ |ent|
       if(usedEntities[ent.entityID] != nil)
         next
@@ -359,13 +397,18 @@ class GRESCityGMLExporter
         fillCityObjectsWithGroup(ent.definition.entities, ent.transformation)
       end
     }
+      #Schreiben des CityGML Headers
+    writeheader()
+    #Zuerst alle Materialien schreiben
     @materials.each_value { |value|
       @writer << value.writeToCityGML(@isWFST)
     }
+    #Aufruf der Export Funktion für jedes CityGML Objekt
     @cityobjects.each_value { |value|
       @writer << value.writeToCityGML(@isWFST, "")
 
     }
+    #Schreiben der CityGML Objekte mit impliziter Geometrie
     implicitRefObjects.each_value { |value|
           @writer << value.writeToCityGML(@isWFST, "")
     }
@@ -389,7 +432,7 @@ class GRESCityGMLExporter
   ####
 
 
-  ##Nur eine Fläche mit der Textur erhält diese momentan....
+  #Nur eine Fläche mit der Textur erhält diese momentan....
 
   ###
 
@@ -598,6 +641,12 @@ def writeheader()
       xsi:schemaLocation=\"http://www.opengis.net/citygml/1.0 http://schemas.opengis.net/citygml/1.0/cityGMLBase.xsd  http://www.opengis.net/citygml/appearance/1.0 http://schemas.opengis.net/citygml/appearance/1.0/appearance.xsd http://www.opengis.net/citygml/building/1.0 http://schemas.opengis.net/citygml/building/1.0/building.xsd http://www.opengis.net/citygml/generics/1.0 http://schemas.opengis.net/citygml/generics/1.0/generics.xsd\">\n"
     end
     end
+    @writer << "<gml:boundedBy>\n"
+    @writer << "<gml:Envelope srsName=\"" + @srsname + "\" srsDimension=\"3\">\n"
+    @writer <<  "<gml:lowerCorner>" + @minx.to_s + " " + @miny.to_s + " " + @minz.to_s + "</gml:lowerCorner>\n"
+    @writer <<  "<gml:upperCorner>" + @maxx.to_s + " " + @maxy.to_s + " " + @maxz.to_s + "</gml:upperCorner>\n"
+    @writer <<  "</gml:Envelope>\n"
+    @writer <<  "</gml:boundedBy>\n"
     
   end
   
@@ -812,8 +861,9 @@ def writeheader()
           return (number * 10**fac).round.to_f/10**fac
     end
 
-
+  #Fügt eine Sketchup Fläche einem bestimmten CityGML Objekt hinzu
   def addfacetoObj(face, currentParent, parentObject, trafo)
+    #hole zuerst flächenspezifische Informationen, z.B. ob diese Fläche zu einem Solid gehört, gml:id usw
     faceatts = face.attribute_dictionary("faceatts", false)
     if(faceatts == nil)
       GRES_CGMLDebugger.writedebugstring("GRESCityGMLExporter Kein Attribut Dictionary für Face \n")
@@ -840,8 +890,26 @@ def writeheader()
          end
 
          xf = ((tpos.x.to_f*@skpfactor)+@translx)
+         if(xf < @minx)
+         	@minx = xf
+         end
+         if(xf > @maxx)
+         	@maxx = xf
+         end
          yf = ((tpos.y.to_f*@skpfactor)+@transly)
+          if(yf < @miny)
+         	@miny = yf
+         end
+         if(yf > @maxy)
+         	@maxy = yf
+         end
          zf = ((tpos.z.to_f*@skpfactor)+@translz)
+         if(zf < @minz)
+         	@minz = zf
+         end
+         if(zf > @maxz)
+         	@maxz = zf
+         end
          GRES_CGMLDebugger.writedebugstring("GRESCityGMLExporter Erzeuge Punkt mit Koordinaten " + xf.to_s + " " + yf.to_s + " " + zf.to_s + "  \n")
         
          linRing.addPointToExport(xf,yf,zf)
@@ -934,6 +1002,7 @@ def writeheader()
   end
 
 
+  #Methode zur Befüllung der CityGML Attribute aus den Sketchup Dictionaries
  def fillattributes obj
 
    objdict = @model.attribute_dictionary(obj.theinternalname, false)

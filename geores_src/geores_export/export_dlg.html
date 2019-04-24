@@ -1,4 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--Export Dialog fuer die Auswahl und Ausgabe der CityGML Daten
+ruft per JAVAScript interne Sketchup Funktionen auf -->
 <HTML>
 <HEAD>
 	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1252">
@@ -51,7 +53,7 @@
 				wfs = true;
 			}
 
-      window.location = "skp:Start@" + translation + "&" + lod + "&" + wfs + "&" + cgml + "&" + classestoexport + "&" + document.getElementsByName("TextBoxDatei")[0].value + "&" + document.getElementsByName("TextBoxTexOrdner")[0].value;
+      window.location = "skp:Start@" + translation + "&" + lod + "&" + wfs + "&" + cgml + "&" + classestoexport + "&" + document.getElementsByName("TextBoxDatei")[0].value + "&" + document.getElementsByName("TextBoxTexOrdner")[0].value + "&" + document.getElementsByName("SRSNAME")[0].value ;
     }
 function OpenFile()
     {
@@ -139,7 +141,8 @@ function transl (){
                                               	  <input type="checkbox" name="cgml_1" value="CityGML1" onclick="handleCityGMLType(this);">  CityGML 1.0 <br><br>
                                                   <input type="checkbox" name="cgml_2" value="CityGML2" onclick="handleCityGMLType(this);">  CityGML 2.0 <br><br>
                                                   <input type="checkbox" name="wfst" value="wfst">  WFS-T<br><br>
-                                                  
+<INPUT TYPE="text" NAME="SRSNAME" VALUE="EPSG:31467" SIZE=37 STYLE="width: 5.98cm; height: 0.9cm; color: #638ba2; font-family: 'DejaVu Sans', sans-serif; font-size: 11pt">
+                                              
 
                                                  
      				</p>

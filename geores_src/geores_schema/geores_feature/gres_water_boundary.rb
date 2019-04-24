@@ -65,4 +65,65 @@ class GRES_WaterBoundary < GRES_CityObject
 
       super(group, appearances, citygmlloader, parents, layer)
    end
+
+    def writeToCityGML isWFST, namespace
+    retstring = ""
+    retstring << "<" + namespace + "boundedBy>\n"
+    retstring << "<" + namespace + getBoundaryNameForInternalName() + " gml:id=\"" + @gmlid + "\">\n"
+
+    @simpleCityObjectAttributes.each { |att|
+
+      retstring << att.value
+    }
+
+      if(@lod2MultiSurface.length > 0)
+        retstring  << "<" + namespace + "lod2MultiSurface>\n"
+        retstring << "<gml:MultiSurface>\n"
+       @lod2MultiSurface.each{ |geo|
+       retstring << geo.writeToCityGML
+      }
+       retstring << "</gml:MultiSurface>\n"
+       retstring  << "</" + namespace + "lod2MultiSurface>\n"
+
+     end
+      if(@lod3MultiSurface.length > 0)
+        retstring  << "<" + namespace + "lod3MultiSurface>\n"
+        retstring << "<gml:MultiSurface>\n"
+       @lod3MultiSurface.each{ |geo|
+       retstring << geo.writeToCityGML
+      }
+       retstring << "</gml:MultiSurface>\n"
+       retstring  << "</" + namespace + "lod3MultiSurface>\n"
+
+     end
+      if(@lod4MultiSurface.length > 0)
+        retstring  << "<" + namespace + "lod4MultiSurface>\n"
+        retstring << "<gml:MultiSurface>\n"
+       @lod4MultiSurface.each{ |geo|
+       retstring << geo.writeToCityGML
+      }
+       retstring << "</gml:MultiSurface>\n"
+       retstring  << "</" + namespace + "lod2MultiSurface>\n"
+
+     end
+
+
+
+    bpstring  = ""
+    @openings.each_value {|bp|
+      bpstring << bp.writeToCityGML(isWFST, namespace)
+    }
+
+
+     retstring << bpstring
+
+
+      retstring << "</"+ namespace + getBoundaryNameForInternalName() +  ">\n"
+      retstring << "</" + namespace + "boundedBy>\n"
+
+    return retstring
+
+
+
+  end
 end

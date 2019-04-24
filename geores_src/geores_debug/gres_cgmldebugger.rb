@@ -1,5 +1,5 @@
-# To change this template, choose Tools | Templates
-# and open the template in the editor.
+# Hilfsdebugger fuer die Ausgabe von Strings in eine Textdatei
+# Für die Benutzung die Kommentare in den Methoden entfernen und einen passenden Dateipfad angeben.
 
 class GRES_CGMLDebugger
   def initialize

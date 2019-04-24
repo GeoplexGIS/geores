@@ -51,16 +51,17 @@ class GRES_Surface
      if(@externalRing.pToExport.length < 3)
        return retString
      end
-
+     indexRing = 0
      retString << "<gml:surfaceMember>\n"
      retString << "<gml:Polygon gml:id=\"" + @gmlid + "\">\n"
      retString << "<gml:exterior>\n"
-     retString << @externalRing.writeToCityGML
+     retString << @externalRing.writeToCityGML(nil)
      retString << "</gml:exterior>\n"
     
      @internalRings.each { |ring|
         retString << "<gml:interior>\n"
-        retString << ring.writeToCityGML
+        retString << ring.writeToCityGML(indexRing)
+        indexRing = indexRing +1
         retString << "</gml:interior>\n"
      }
 
@@ -111,8 +112,14 @@ end
      end
      #puts "gmlid " + @gmlid
     # puts "xlink" + @xlink
-     createextring(group.entities, appearances, parentnames, parentgmlid, lod, layer, isimpl, issolid)
-     createintring(group.entities, isimpl)
+    entitiesToUse = group.entities
+    if(@internalRings.length > 0)#
+      newgroup = entitiesToUse.add_group
+      entitiesToUse = newgroup.entities
+    end
+
+     createextring(entitiesToUse, appearances, parentnames, parentgmlid, lod, layer, isimpl, issolid)
+     createintring(entitiesToUse, isimpl)
   end
 
 

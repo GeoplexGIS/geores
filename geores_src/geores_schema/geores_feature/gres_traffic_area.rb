@@ -67,4 +67,61 @@ class GRES_TrafficArea < GRES_CityObject
  
       super(group, appearances, citygmlloader, parents, layer)
    end
+
+ def writeToCityGML isWFST, namespace
+
+    retstring = ""
+    lastString = ""
+    if(@type.index("AuxiliaryTrafficArea") != nil)
+      retstring << "<tran:auxiliaryTrafficArea>\n"
+      retstring << "<tran:AuxiliaryTrafficArea" + " gml:id=\"" + @gmlid + "\">\n"
+      lastString << "</tran:AuxiliaryTrafficArea>\n"
+      lastString << "</tran:auxiliaryTrafficArea>\n"
+    else
+       retstring << "<tran:trafficArea>\n"
+      retstring << "<tran:TrafficArea" + " gml:id=\"" + @gmlid + "\">\n"
+      lastString << "</tran:TrafficArea>\n"
+      lastString << "</tran:trafficArea>\n"
+    end
+
+    @simpleCityObjectAttributes.each { |att|
+
+      retstring << att.value
+    }
+
+
+       if(@lod2MultiSurface.length > 0)
+        retstring  << "<tran:lod2MultiSurface>\n"
+        retstring << "<gml:MultiSurface>\n"
+       @lod2MultiSurface.each{ |geo|
+       retstring << geo.writeToCityGML
+      }
+       retstring << "</gml:MultiSurface>\n"
+       retstring  << "</tran:lod2MultiSurface>\n"
+
+     end
+       if(@lod3MultiSurface.length > 0)
+        retstring  << "<tran:lod3MultiSurface>\n"
+        retstring << "<gml:MultiSurface>\n"
+       @lod3MultiSurface.each{ |geo|
+       retstring << geo.writeToCityGML
+      }
+       retstring << "</gml:MultiSurface>\n"
+       retstring  << "</tran:lod3MultiSurface>\n"
+
+     end
+       if(@lod4MultiSurface.length > 0)
+        retstring  << "<tran:lod4MultiSurface>\n"
+        retstring << "<gml:MultiSurface>\n"
+       @lod4MultiSurface.each{ |geo|
+       retstring << geo.writeToCityGML
+      }
+       retstring << "</gml:MultiSurface>\n"
+       retstring  << "</tran:lod4MultiSurface>\n"
+
+     end
+
+     retstring << lastString
+    return retstring
+  end
 end

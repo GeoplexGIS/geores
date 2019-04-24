@@ -52,6 +52,7 @@ class GRES_GeoreferencedTexture < GRES_AbstractAppearance
     end
 
      retString << "<app:Appearance>\n"
+     retString << "<app:theme>default</app:theme>"
      retString << "<app:surfaceDataMember>\n"
      retString << "<app:GeoreferencedTexture>\n"
      if(@name != "")

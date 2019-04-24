@@ -30,6 +30,7 @@ class GRES_ParameterizedTexture < GRES_AbstractAppearance
     end
 
      retString << "<app:Appearance>\n"
+     retString << "<app:theme>default</app:theme>"
      retString << "<app:surfaceDataMember>\n"
      retString << "<app:ParameterizedTexture>\n"
      #if(@name != "")

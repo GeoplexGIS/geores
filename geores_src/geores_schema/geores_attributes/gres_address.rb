@@ -36,50 +36,62 @@ class GRES_Address < AbstractAll
     @points.push(p0)
   end
 
-  def writeToCityGML
+  def writeToCityGML namespace
     retString = ""
+    retString << "<" + namespace + ":address>\n"
     retString << "<core:Address>\n"
     retString << "<core:xalAddress>\n"
-    retString << "<xAl:AddressDetails>\n"
-    retString << "<xAl:Country>\n"
-    retString << "<xAl:CountryName>" + @country + "</xAl:CountryName>\n"
-    retString << "<xAl:Locality Type=\"Town\">\n"
-    retString << "<xAl:LocalityName>"+ @town + "</xAl:LocalityName>\n"
-    retString << "<xAl:Thoroughfare Type=\"Street\">\n"
-    retString << "<xAl:ThoroughfareNumber>" + @streetnumber + "</xAl:ThoroughfareNumber>\n"
-    retString << "<xAl:ThoroughfareName>" + @street +  " </xAl:ThoroughfareName>\n"
-    retString << "</xAl:Thoroughfare>\n"
+    retString << "<xAL:AddressDetails>\n"
+    retString << "<xAL:Country>\n"
+    retString << "<xAL:CountryName>" + @country + "</xAL:CountryName>\n"
+    retString << "<xAL:Locality Type=\"Town\">\n"
+    retString << "<xAL:LocalityName>"+ @town + "</xAL:LocalityName>\n"
+    if(@street != "")
+          retString << "<xAL:Thoroughfare Type=\"Street\">\n"
+          retString << "<xAL:ThoroughfareNumber>" + @streetnumber + "</xAL:ThoroughfareNumber>\n"
+          retString << "<xAL:ThoroughfareName>" + @street +  " </xAL:ThoroughfareName>\n"
+          retString << "</xAL:Thoroughfare>\n"
+    end
 
     if(@postalnumber != "")
       retString << "<xAL:PostalCode>\n"
 			retString << "<xAL:PostalCodeNumber>" + @postalnumber + "</xAL:PostalCodeNumber>\n"
 			retString << "</xAL:PostalCode>\n"
     end
-    retString <<  "</xAl:Locality>\n"
-    retString << "</xAl:Country>\n"
-    retString << "</xAl:AddressDetails>\n"
+    retString <<  "</xAL:Locality>\n"
+    retString << "</xAL:Country>\n"
+    retString << "</xAL:AddressDetails>\n"
     retString << "</core:xalAddress>\n"
     if(@points.length > 0)
-      retString << "<core:MultiPoint>\n"
+      retString << "<core:multiPoint>\n"
       retString << "<gml:MultiPoint>\n"
       @points.each { |p|
          retString << "<gml:pointMember>\n"
 				 retString <<	 "<gml:Point>\n"
 				 retString <<	 "<gml:pos srsDimension=\"3\">" +  p.x.to_f.to_s + " " + p.y.to_f.to_s + " " + p.z.to_f.to_s + "</gml:pos>\n"
 			   retString <<	 "</gml:Point>\n"
-					retString << "<//gml:pointMember>\n"
+					retString << "</gml:pointMember>\n"
       }
        retString << "</gml:MultiPoint>\n"
-      retString << "</core:MultiPoint>\n"
+      retString << "</core:multiPoint>\n"
     end
     retString << "</core:Address>\n"
+    retString << "</" + namespace + ":address>\n"
     return retString
   end
 
   def buildToSKP(parent, entity, dictname, counter)
      dictionary = entity.attribute_dictionary(dictname, true)
      dname = "Address" + counter.to_s
-     dictionary[dname] = writeToCityGML
+     namespace = "bldg"
+     if(parent.index("Bridge") != nil)
+       namespace = "brid"
+     end
+     if(parent.index("Tunnel") != nil)
+       namespace = "tun"
+     end
+
+     dictionary[dname] = writeToCityGML namespace
    end
 
    def buildFromSKP(entity, dictname)
