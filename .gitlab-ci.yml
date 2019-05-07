@@ -1,3 +1,7 @@
+before_script:
+# install extra build packages
+  - apk add --no-cache zip
+
 ziprbz:
   script:
     - zip -r geores.rbz . -x "README.md"
