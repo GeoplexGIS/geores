@@ -1,0 +1,4 @@
+ziprbz:
+  script:
+    - zip -r geores.zip . -x "README.md"
+    - mv geores.zip geores.rbz
