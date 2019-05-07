@@ -4,4 +4,8 @@ before_script:
 
 ziprbz:
   script:
-    - zip -r geores.rbz . -x "README.md"
+    - zip -r geores.rbz geores_tools_extension.rb  geores_src
+  artifacts:
+    paths:
+    - geores.rbz
+    expire_in: 1 week
