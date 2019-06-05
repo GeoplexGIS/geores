@@ -2,8 +2,9 @@
 
 ## About
 
-The GEORES SketchUp CityGML Plugin allows to import and export CityGML files. It also provides
-functionalities to annotate meshes and faces with the according CityGML classes and attributes.
+The GEORES SketchUp CityGML Plugin allows SketchUp to import and export CityGML files. It also
+provides functionalities to annotate meshes and faces with the according CityGML classes and
+attributes.
 
 The code has originally been developed by Wolfgang Sach and distributed by his company. In 2019,
 Wolfgang stopped development on the project and released the code as open source.
