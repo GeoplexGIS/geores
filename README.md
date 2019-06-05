@@ -17,4 +17,4 @@ Wolfgang stopped development on the project and released the code as open source
 
 ## Installation
 
-Zip this directory and rename to `.rbz`, then use SketchUp Plugin Manager to install.
+Zip this directory and rename to `.rbz`, then use SketchUp Extension Manager to install.
