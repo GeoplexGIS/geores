@@ -4,7 +4,7 @@ before_script:
 
 ziprbz:
   script:
-    - zip -r geores.rbz geores_tools_extension.rb  geores_src
+    - zip -r geores.rbz geores_tools_extension.rb geores_src
   artifacts:
     paths:
     - geores.rbz
