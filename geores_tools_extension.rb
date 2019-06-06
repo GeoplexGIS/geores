@@ -8,7 +8,7 @@ toolext1 = SketchupExtension.new "GEORES CityGML Import V2", "geores_src/geores_
  
 toolext1.description="Adds a CityGML Importer to Sketchup"
 
-toolext1.version="2.0.2"
+toolext1.version="2.0.3"
 toolext1.creator = "GEORES"
 toolext1.copyright = "2017, GEORES"
 #test nur CityGML 2.0
@@ -18,7 +18,7 @@ Sketchup.register_extension toolext1, true
 wt_extensionk = SketchupExtension.new("GEORES CityGML Edit Dialog V2", "geores_src/geores_gui/gres_editdlg.rb")
 
 wt_extensionk.description = "GEORES CityGML Objekt Dialog"
-wt_extensionk.version = "2.0.2"
+wt_extensionk.version = "2.0.3"
 wt_extensionk.creator = "GEORES"
 wt_extensionk.copyright = "2017, GEORES"
 
@@ -28,7 +28,7 @@ Sketchup.register_extension wt_extensionk, true
 toolbar_ext = SketchupExtension.new("GEORES CityGML Toolbars V2", "geores_src/geores_toolbar/LayerGenerator.rb")
 
 toolbar_ext.description = "GEORES CityGML Toolbars"
-toolbar_ext.version = "2.0.2"
+toolbar_ext.version = "2.0.3"
 toolbar_ext.creator = "GEORES"
 toolbar_ext.copyright = "2017, GEORES"
 
@@ -57,7 +57,7 @@ end
 wt_exp_extension = SketchupExtension.new("GEORES CityGML Export V2",  "geores_src/geores_export/gres_export_main.rb")
 
 wt_exp_extension.description = "GEORES CityGML Export"
-wt_exp_extension.version = "2.0.2"
+wt_exp_extension.version = "2.0.3"
 wt_exp_extension.creator = "GEORES"
 wt_exp_extension.copyright = "2017, GEORES"
 
