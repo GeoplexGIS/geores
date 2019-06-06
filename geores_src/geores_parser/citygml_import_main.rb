@@ -4,18 +4,18 @@ Sketchup::require 'sketchup.rb'
 Sketchup::require 'geores_src/geores_parser/citygml_loader.rb'
 Sketchup::require 'geores_src/geores_gui/time.rb'
 
-class CityGMLImportMain < Sketchup::Importer
+class CityGMLImportMainGML < Sketchup::Importer
     # This method is called by SketchUp to determine the description that
        # appears in the File > Import dialog's pulldown list of valid
        # importers.
        def description
-         return "CityGML GEORES Import V2 (*.xml/*.gml)"
+         return "CityGML GEORES Import V2 (*.gml)"
        end
 
        # This method is called by SketchUp to determine what file extension
        # is associated with your importer.
        def file_extension
-         return "*.gml;*.xml"
+         return "gml"
        end
 
        # This method is called by SketchUp to get a unique importer id.
@@ -94,4 +94,26 @@ class CityGMLImportMain < Sketchup::Importer
          return 0 # 0 is the code for a successful import
        end
      end
- Sketchup.register_importer(CityGMLImportMain.new)
+
+class CityGMLImportMainXML < CityGMLImportMainGML
+    # This method is called by SketchUp to determine the description that
+       # appears in the File > Import dialog's pulldown list of valid
+       # importers.
+       def description
+         return "CityGML GEORES Import V2 (*.xml)"
+       end
+
+       # This method is called by SketchUp to determine what file extension
+       # is associated with your importer.
+       def file_extension
+         return "xml"
+       end
+
+       # This method is called by SketchUp to get a unique importer id.
+       def id
+         return "com.sketchup.importers.geores_cgml_v2_xml"
+       end
+     end
+
+Sketchup.register_importer(CityGMLImportMainGML.new)
+Sketchup.register_importer(CityGMLImportMainXML.new)
