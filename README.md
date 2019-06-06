@@ -19,4 +19,5 @@ Pull requests welcome!
 
 ## Installation
 
-Zip this directory and rename to `.rbz`, then use SketchUp Extension Manager to install.
+Download the `geores.rbz` from [here](https://github.com/GeoplexGIS/geores/releases) and use
+SketchUp Extension Manager to install.
