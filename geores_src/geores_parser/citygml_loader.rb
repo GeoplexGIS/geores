@@ -101,7 +101,7 @@ class CityGMLLoader
      handleParsedObjects(cityobjects, appearances)
      @tFinished = Time.now.to_s
      @model.set_attribute "baseinfos" , "currentcityobjectcount", @currentcounter
-      UI.messagebox("Imported erfolgreich \n" +
+      UI.messagebox("Import erfolgreich \n" +
          "Startzeit " + @tStart.to_s + "\n" +
          "Ende der CityGML Interpretation " + @tEndParsing.to_s + "\n" +
          "Ende der Erzeugung aller Materialien " + @tFinishedAppearances.to_s + "\n" +
