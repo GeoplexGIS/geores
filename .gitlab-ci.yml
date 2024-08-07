@@ -3,9 +3,14 @@ before_script:
   - apk add --no-cache zip
 
 ziprbz:
+  image:
+    name: alpine:3.20.2
   script:
     - zip -r geores.rbz geores_tools_extension.rb geores_src
   artifacts:
     paths:
     - geores.rbz
     expire_in: 1 week
+  tags:
+    - e2e
+
