@@ -29,7 +29,9 @@ module REXML
         if enc and enc != UTF_8 and enc != "WINDOWS-1252"
           @encoding = enc
           raise ArgumentError, "Bad encoding name #@encoding" unless @encoding =~ /^[\w-]+$/
-          @encoding.untaint
+          if RUBY_VERSION < '3.0'
+            @encoding.untaint
+          end
           begin
             Sketchup::require 'geores_src/geores_import/geores_rexml/geores_encodings/ICONV.rb'
           Encoding.apply(self, "ICONV")

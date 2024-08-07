@@ -179,7 +179,9 @@ module REXML
         end
         rv = super
       end
-      rv.taint
+      if RUBY_VERSION < '3.0'
+        rv.taint
+      end
       rv
     end
 
@@ -212,7 +214,9 @@ module REXML
           @source = nil
         end
       end
-      rv.taint
+      if RUBY_VERSION < '3.0'
+        rv.taint
+      end
       rv
     end
     

@@ -12,8 +12,14 @@ end
 class Symbol
   def dclone ; self ; end
 end
-class Fixnum
-  def dclone ; self ; end
+if RUBY_VERSION < '2.4'
+  class Fixnum
+    def dclone ; self ; end
+  end
+else
+  class Integer
+    def dclone ; self ; end
+  end
 end
 class Float
   def dclone ; self ; end

@@ -64,7 +64,7 @@ class GRESCityGMLExporter
     begin
       #Erzeugen des Texturordners, falls dieser noch nicht vorhanden ist
       if(@textureFolder != "")
-        Dir.mkdir(@filedir+ "/" + @textureFolder)unless File.exists?(@filedir+ "/" + @textureFolder)
+        Dir.mkdir(@filedir+ "/" + @textureFolder)unless File.exist?(@filedir+ "/" + @textureFolder)
       end
       
     #GRES_CGMLDebugger.init
