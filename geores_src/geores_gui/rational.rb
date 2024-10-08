@@ -480,51 +480,53 @@ class Integer
   end
 end
 
-class Fixnum
-  undef quo
-  # If Rational is defined, returns a Rational number instead of a Fixnum.
-  def quo(other)
-    Rational.new!(self,1) / other
-  end
-  alias rdiv quo
+if RUBY_VERSION < '2.4'
+  class Fixnum
+    undef quo
+    # If Rational is defined, returns a Rational number instead of a Fixnum.
+    def quo(other)
+      Rational.new!(self,1) / other
+    end
+    alias rdiv quo
 
-  # Returns a Rational number if the result is in fact rational (i.e. +other+ < 0).
-  def rpower (other)
-    if other >= 0
-      self.power!(other)
-    else
-      Rational.new!(self,1)**other
+    # Returns a Rational number if the result is in fact rational (i.e. +other+ < 0).
+    def rpower (other)
+      if other >= 0
+        self.power!(other)
+      else
+        Rational.new!(self,1)**other
+      end
+    end
+
+    unless defined? 1.power!
+      alias power! **
+      alias ** rpower
     end
   end
 
-  unless defined? 1.power!
-    alias power! **
-    alias ** rpower
-  end
-end
-
-class Bignum
-  unless defined? Complex
-    alias power! **
-  end
-
-  undef quo
-  # If Rational is defined, returns a Rational number instead of a Bignum.
-  def quo(other)
-    Rational.new!(self,1) / other
-  end
-  alias rdiv quo
-
-  # Returns a Rational number if the result is in fact rational (i.e. +other+ < 0).
-  def rpower (other)
-    if other >= 0
-      self.power!(other)
-    else
-      Rational.new!(self, 1)**other
+  class Bignum
+    unless defined? Complex
+      alias power! **
     end
-  end
 
-  unless defined? Complex
-    alias ** rpower
+    undef quo
+    # If Rational is defined, returns a Rational number instead of a Bignum.
+    def quo(other)
+      Rational.new!(self,1) / other
+    end
+    alias rdiv quo
+
+    # Returns a Rational number if the result is in fact rational (i.e. +other+ < 0).
+    def rpower (other)
+      if other >= 0
+        self.power!(other)
+      else
+        Rational.new!(self, 1)**other
+      end
+    end
+
+    unless defined? Complex
+      alias ** rpower
+    end
   end
 end
