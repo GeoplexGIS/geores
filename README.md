@@ -17,6 +17,7 @@ Pull requests welcome!
 * SketchUp 2018
 * SketchUp 2019
 * SketchUp 2024
+* SketchUp 2025
 
 ## Installation
 
